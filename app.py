@@ -1,13 +1,14 @@
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import sys
 
-class HelloHandler(SimpleHTTPRequestHandler):
+class HelloHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
-        self.send_header("Content-type", "text/plain")
+        self.send_header("Content-type", "text/plain; charset=utf-8")
         self.end_headers()
-        # Updated message to verify new deployment
-        self.wfile.write(b"Hello World v2: Successfully deployed via Jenkins Pipeline!")
+        self.wfile.write(b"Hello World from AWS EC2 via Jenkins Pipeline!")
 
-server = HTTPServer(("0.0.0.0", 8000), HelloHandler)
-print("Serving on port 8000...")
-server.serve_forever()
+if __name__ == "__main__":
+    print("Starting server on 0.0.0.0:8000...", flush=True)
+    server = HTTPServer(("0.0.0.0", 8000), HelloHandler)
+    server.serve_forever()
